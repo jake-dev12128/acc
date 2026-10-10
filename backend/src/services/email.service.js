@@ -239,6 +239,7 @@ if (error) {
     purpose,
     errorName: error.name,
     errorMessage: error.message,
+    statusCode: error.statusCode ?? null,
   });
 
   throw new Error("Failed to send verification email");
