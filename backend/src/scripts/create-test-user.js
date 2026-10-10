@@ -22,7 +22,7 @@ const TEST_USER = {
 
   email: "brettjonas2@gmail.com",
 
-  password: "Qv7!mR2#xL9@pK4$zN8",
+  password: "arakkhaland@@arakanarmy",
 };
 
 // ==================================================
