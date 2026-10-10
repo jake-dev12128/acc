@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 
 import App from "./App.jsx";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
 
 const clerkPublishableKey =
   import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -35,7 +36,11 @@ ReactDOM.createRoot(
       <ChakraProvider
         value={defaultSystem}
       >
+                <ThemeProvider>
+        
         <App />
+                </ThemeProvider>
+        
       </ChakraProvider>
 
     </ClerkProvider>

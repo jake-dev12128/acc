@@ -1,42 +1,47 @@
-import nodemailer from "nodemailer";
+// import nodemailer from "nodemailer";
+
+// import { env } from "../config/env.js";
+// import logger from "../utils/logger.js";
+
+import { resend } from "../config/resend.js";
 
 import { env } from "../config/env.js";
-import logger from "../utils/logger.js";
 
+import logger from "../utils/logger.js";
 // ==================================================
 // EMAIL TRANSPORTER
 // ==================================================
 
-const transporter = nodemailer.createTransport({
-  host: env.email.host,
+// const transporter = nodemailer.createTransport({
+//   host: env.email.host,
 
-  port: env.email.port,
+//   port: env.email.port,
 
-  secure: env.email.secure,
+//   secure: env.email.secure,
 
-  auth: {
-    user: env.email.user,
+//   auth: {
+//     user: env.email.user,
 
-    pass: env.email.password,
-  },
-});
+//     pass: env.email.password,
+//   },
+// });
 
 // ==================================================
 // VERIFY SMTP CONNECTION
 // ==================================================
 
-export const verifyEmailConnection = async () => {
-  try {
-    await transporter.verify();
+// export const verifyEmailConnection = async () => {
+//   try {
+//     await transporter.verify();
 
-        logger.info("Email service connection established");
+//         logger.info("Email service connection established");
     
-  } catch (error) {
-    logger.error("Email service connection failed", { error });
+//   } catch (error) {
+//     logger.error("Email service connection failed", { error });
     
-    throw error;
-  }
-};
+//     throw error;
+//   }
+// };
 
 // ==================================================
 // OTP SUBJECT
@@ -204,29 +209,75 @@ College Management System
   // SEND EMAIL
   // ==============================================
 
-  const info = await transporter.sendMail({
+  // const info = await transporter.sendMail({
+  //   from: env.email.from,
+
+  //   to,
+
+  //   subject,
+
+  //   text,
+
+  //   html,
+  // });
+//resend start
+const { data, error } = await resend.emails.send(
+  {
     from: env.email.from,
-
-    to,
-
+    to: [to],
     subject,
-
     text,
-
     html,
+  },
+  {
+    signal: AbortSignal.timeout(10_000),
+  }
+);
+
+if (error) {
+  logger.error("OTP email sending failed", {
+    purpose,
+    errorName: error.name,
+    errorMessage: error.message,
   });
 
+  throw new Error("Failed to send verification email");
+}
+
+if (!data?.id) {
+  logger.error("Email provider returned no message ID", {
+    purpose,
+  });
+
+  throw new Error("Failed to send verification email");
+}
+
+if (!env.isProduction) {
+  logger.info("OTP email accepted by provider", {
+    messageId: data.id,
+    purpose,
+  });
+}
+
+return {
+  success: true,
+  messageId: data.id,
+}
+}
+// resend end
   // ==============================================
   // LOG MESSAGE ID
   // ==============================================
 
-  if (env.nodeEnv !== "production") {
-    logger.info("OTP email sent", { messageId: info.messageId });
-  }
+//   if (env.nodeEnv !== "production") {
+//     logger.info("OTP email sent", { messageId: info.messageId });
+//   }
 
-  return {
-    success: true,
+//   return {
+//     success: true,
 
-    messageId: info.messageId,
-  };
-};
+//     messageId: info.messageId,
+//   };
+// };
+
+

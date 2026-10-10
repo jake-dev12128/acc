@@ -39,75 +39,78 @@ function Dashboard() {
   // LOAD DASHBOARD DATA
   // ==================================================
 
-  useEffect(() => {
-    const controller = new AbortController();
+  
+// ==================================================
+// LOAD DASHBOARD DATA
+// ==================================================
 
-    const loadDashboard = async () => {
-      try {
-        setLoading(true);
+useEffect(() => {
+  const controller = new AbortController();
 
-        setError("");
+  const loadDashboard = async () => {
+    setLoading(true);
+    setError("");
 
-        // ========================================
-        // GET CLERK TOKEN
-        // ========================================
-
-        // ========================================
-        // LOAD USER
-        // ========================================
-        const userResponse = await api.get("/auth/me", {
+    try {
+      const results = await Promise.allSettled([
+        api.get("/auth/me", {
           signal: controller.signal,
-        });
-
-        // ========================================
-        // LOAD REFERRAL
-        // ========================================
-
-        const referralResponse = await api.get("/referrals", {
+        }),
+        api.get("/referrals", {
           signal: controller.signal,
-        });
+        }),
+      ]);
 
-        // ========================================
-        // USER
-        // ========================================
+      if (controller.signal.aborted) return;
 
-        setUser(userResponse.data.user);
+      const [userResult, referralResult] = results;
 
-        // ========================================
-        // REFERRAL
-        // ========================================
+      // User data
+      if (userResult.status === "fulfilled") {
+        setUser(userResult.value.data.user);
+      } else {
+        throw userResult.reason;
+      }
 
-        const referrals = referralResponse.data.data;
+      // Referral data
+      if (referralResult.status === "fulfilled") {
+        const referrals = referralResult.value.data.data;
 
-        if (Array.isArray(referrals) && referrals.length > 0) {
-          setReferral(referrals[0]);
-        } else {
-          setReferral(null);
-        }
+        setReferral(
+          Array.isArray(referrals) && referrals.length > 0
+            ? referrals[0]
+            : null,
+        );
+      } else {
+        setReferral(null);
+      }
 
-        // ========================================
-        // CLEAR TEMP LOGIN STATE
-        // ========================================
+      clearLoginAttempt();
+    } catch (error) {
+      if (
+        controller.signal.aborted ||
+        error?.code === "ERR_CANCELED"
+      ) {
+        return;
+      }
 
-        clearLoginAttempt();
-      } catch (error) {
-        if (error?.code === "ERR_CANCELED") return;
-
-        const message =
-          error?.response?.data?.message ||
-          error?.message ||
-          "Failed to load dashboard.";
-
-        setError(message);
-      } finally {
+      setError(
+        error?.response?.data?.message ||
+          "Failed to load dashboard.",
+      );
+    } finally {
+      if (!controller.signal.aborted) {
         setLoading(false);
       }
-    };
+    }
+  };
 
-    loadDashboard();
+  loadDashboard();
 
-    return () => controller.abort();
-  }, [clearLoginAttempt]);
+  return () => controller.abort();
+}, [clearLoginAttempt]);
+
+
 
   // ==================================================
   // COPY REFERRAL CODE

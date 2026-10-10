@@ -1,9 +1,13 @@
 import { Box, Container, Grid, GridItem, Heading, Link, Text, VStack } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
+import { useThemeMode } from "../../context/ThemeContext.jsx";
 
 export default function Footer() {
+  const { theme } = useThemeMode();
+  const isDark = theme === "dark";
+
   return (
-    <Box bg="gray.950" color="white" mt="20">
+    <Box bg={isDark ? "black" : "gray.950"} color="white" mt="20">
       <Container maxW="1280px" py="14">
         <Grid templateColumns={{ base: "1fr", md: "2fr 1fr 1fr 1fr" }} gap="10">
           <GridItem>
@@ -35,9 +39,10 @@ export default function Footer() {
           <GridItem>
             <Heading size="sm" mb="4">Contact</Heading>
             <VStack align="start" gap="2" color="gray.400">
-              <Text>Yangon, Myanmar</Text>
+              <Text>Acc College</Text>
               <Text>info@acc.com</Text>
               <Text>+95 9 000 000 000</Text>
+              <Text>@acc2026.aa</Text>
             </VStack>
           </GridItem>
         </Grid>

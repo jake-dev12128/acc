@@ -49,7 +49,7 @@ export default function Hero() {
               >
                 <Box
                   as="img"
-                  src="/acc_logo.png"
+                  src="/logo.png"
                   w="100%"
                   h="100%"
                   objectFit="contain"

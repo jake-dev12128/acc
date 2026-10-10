@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { env } from "./config/env.js";
 import { connectDB } from "./config/db.js";
 import { connectRedis, redisClient } from "./config/redis.js";
-import { verifyEmailConnection } from "./services/email.service.js";
+// import { verifyEmailConnection } from "./services/email.service.js";
 import { setReady, setShuttingDown } from "./utils/runtime.js";
 import logger from "./utils/logger.js";
 
@@ -14,7 +14,7 @@ const startServer = async () => {
   try {
     await connectDB();
     await connectRedis();
-    await verifyEmailConnection();
+    // await verifyEmailConnection();
 
     const server = app.listen(env.port, () => {
       setReady(true);

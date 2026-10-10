@@ -10,8 +10,8 @@ export default function Contact() {
           <Box>
             <Heading size="lg">Contact Information</Heading>
             <Text mt="5" color="gray.600" lineHeight="2">
-              Yangon, Myanmar<br />
-              info@acc.com<br />
+              Arakkha<br />
+              arakkhacomputercollege@acc.com<br />
               +95 9 000 000 000
             </Text>
           </Box>

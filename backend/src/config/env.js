@@ -57,36 +57,44 @@ export const env = {
   cloudinaryApiKey: process.env.CLOUDINARY_API_KEY || "",
 
   cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET || "",
-  email: {
-    host:
-      getRequiredEnv(
-        "SMTP_HOST"
-      ),
+  // email: {
+  //   host:
+  //     getRequiredEnv(
+  //       "SMTP_HOST"
+  //     ),
 
-    port:
-      Number(
-        process.env.SMTP_PORT ||
-        587
-      ),
+  //   port:
+  //     Number(
+  //       process.env.SMTP_PORT ||
+  //       587
+  //     ),
 
-    secure:
-      process.env.SMTP_SECURE ===
-      "true",
+  //   secure:
+  //     process.env.SMTP_SECURE ===
+  //     "true",
 
-    user:
-      getRequiredEnv(
-        "SMTP_USER"
-      ),
+  //   user:
+  //     getRequiredEnv(
+  //       "SMTP_USER"
+  //     ),
 
-    password:
-      getRequiredEnv(
-        "SMTP_PASSWORD"
-      ),
+  //   password:
+  //     getRequiredEnv(
+  //       "SMTP_PASSWORD"
+  //     ),
+
+  //   from:
+  //     getRequiredEnv(
+  //       "SMTP_FROM"
+  //     ),
+  // },
+     email: {
+    apiKey:
+      getRequiredEnv("RESEND_API_KEY"),
 
     from:
-      getRequiredEnv(
-        "SMTP_FROM"
-      ),
+      getRequiredEnv("EMAIL_FROM"),
   },
+
 
 };
